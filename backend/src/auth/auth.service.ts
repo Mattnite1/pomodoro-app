@@ -34,7 +34,7 @@ export class AuthService {
     }
   }
   async login(dto: AuthDto) {
-    const user = this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
       },
@@ -44,14 +44,13 @@ export class AuthService {
       throw new ForbiddenException('Credentials incorrect');
     }
 
-    const pwMatches = await argon.verify((await user).hash, dto.password);
+    const passwordMatches = await argon.verify(user.hash, dto.password);
 
-    if (!pwMatches) {
+    if (!passwordMatches) {
       throw new ForbiddenException('incorrect password');
     }
-    
-    return this.jwtToken((await user).id, (await user).email);
 
+    return this.jwtToken(user.id, user.email);
   }
 
   async jwtToken(
