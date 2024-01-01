@@ -4,8 +4,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getServerSession } from "next-auth";
 import SessionProvider from "../components/SessionProvider";
-import { AvatarDemo } from "@/components/view/Avatar";
-import DropdownMenuView from "@/components/view/DropdownMenu";
+import CheckSession from "@/components/CheckSession";
+import NavBar from "@/components/view/NavBar";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,15 +21,17 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession();
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider session={session}>
-        <DropdownMenuView />
           <ThemeProvider attribute="class" defaultTheme="system">
-            <main className="flex flex-row place-content-between mx-2">
-              {children}
-            </main>
+            <nav className="flex justify-end p-4">
+              <NavBar />
+            </nav>
+            {children}
+            <Toaster />
           </ThemeProvider>
         </SessionProvider>
       </body>
