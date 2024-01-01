@@ -11,16 +11,47 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email String @unique
+  email    String @unique
   username String @unique
-  hash String
+  hash     String
+  refreshToken String?
 
   firstName String?
-  lastName String?
+  lastName  String?
+
+  tasks Task[]
+  session Pomodoro[]
 
   @@map("users")
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String?
+  inProgress  Boolean?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@map("tasks")
+}
+
+model Pomodoro {
+  id Int @id @default(autoincrement())
+
+  startTime DateTime
+  endTime DateTime
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@map("timers")
 }
