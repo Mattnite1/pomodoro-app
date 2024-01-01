@@ -1,24 +1,28 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+'use client'
+import {Link} from "@nextui-org/react";
+import { signIn, useSession } from "next-auth/react";
+import DropdownMenuView from "../DropdownMenu";
 
-function AuthButton() {
+function CheckSession() {
   const { data: session } = useSession();
 
   if (session) {
     return (
       <>
-        {session?.user?.email} <br />
-        <button onClick={() => signOut()}>signOut</button>
+        <DropdownMenuView />
       </>
     );
   }
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>signIn</button>
+      <Link href={''} onClick={() => signIn()} underline="focus" className="mr-5">Sign in</Link> 
+      <Link href="/api/auth/signup" underline="focus">Create an Account</Link> 
     </>
   );
 }
 
-export default function NavMenu() {
-  return <AuthButton />;
+export default function NavBar() {
+  return (
+      <CheckSession />
+  )
 }
