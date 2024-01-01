@@ -1,18 +1,22 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { JwtService } from '@nestjs/jwt';
+import { AuthLoginDto, AuthSignupDto } from './dto';
+import { ConfigService } from '@nestjs/config';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
+    private config: ConfigService,
+    private user: UserService,
   ) {}
 
-  async signup(dto: AuthDto) {
+  async signup(dto: AuthSignupDto) {
     const hash = await argon.hash(dto.password);
 
     try {
@@ -20,11 +24,15 @@ export class AuthService {
         data: {
           username: dto.username,
           email: dto.email,
+          firstName: dto.firstname,
+          lastName: dto.lastname,
           hash,
         },
       });
 
-      return this.jwtToken(user.id, user.email);
+      const tokens = await this.getTokens(user.id, user.email);
+      await this.updateRefreshToken(user.id, tokens.refresh_token);
+      return tokens;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -33,7 +41,7 @@ export class AuthService {
       }
     }
   }
-  async login(dto: AuthDto) {
+  async login(dto: AuthLoginDto) {
     const user = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -50,27 +58,45 @@ export class AuthService {
       throw new ForbiddenException('incorrect password');
     }
 
-    return this.jwtToken(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+    return tokens;
   }
 
-  async jwtToken(
-    userId: number,
-    email: string,
-  ): Promise<{ access_token: string }> {
-    const tokenData = {
-      sub: userId,
-      email,
-    };
-
-    const secret = 'super-secret';
-
-    const token = await this.jwt.signAsync(tokenData, {
-      expiresIn: '15m',
-      secret: secret,
+  async updateRefreshToken(userId: number, refresh_token: string) {
+    const hashedRefreshToken = await argon.hash(refresh_token);
+    await this.user.editUser(userId, {
+      refreshToken: hashedRefreshToken,
     });
+  }
+
+  async getTokens(userId: number, email: string) {
+    const [access_token, refresh_token] = await Promise.all([
+      this.jwt.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          expiresIn: '7d',
+          secret: this.config.get('TOKEN_KEY'),
+        },
+      ),
+      this.jwt.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          expiresIn: '7d',
+          secret: this.config.get('TOKEN_KEY'),
+        },
+      ),
+    ]);
 
     return {
-      access_token: token,
+      access_token,
+      refresh_token,
     };
   }
 }
