@@ -3,7 +3,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -13,20 +12,26 @@ import Link from "next/link";
 
 export default function DropdownMenuComponent() {
   const { data: session } = useSession();
+
   return (
+    <div className="fixed m-1">
       <DropdownMenu>
         <DropdownMenuTrigger>
           <AvatarDemo />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem>
-            <Link href={"/dashboard"}><p className="font-bold">My Account</p></Link>
+            <Link href={"/dashboard"}>
+              <p className="font-bold">My Account</p>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <Link href={"/"}>Pomodoro</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem><Link href={"/history"}>History</Link></DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href={"/history"}>History</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>Friends</DropdownMenuItem>
           <DropdownMenuItem className="border-t w-full">
             {session ? (
@@ -35,5 +40,6 @@ export default function DropdownMenuComponent() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+    </div>
   );
 }

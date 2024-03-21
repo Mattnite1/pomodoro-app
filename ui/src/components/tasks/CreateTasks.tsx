@@ -7,11 +7,12 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { CreateTaskSchema } from "./zod.createTask.schema";
 import { useToast } from "@/components/ui/use-toast";
-import ShowTasks from "./ShowTasks";
+import { useTaskContext } from "./ShowTaskContext";
 
 export default function CreateTaskView() {
   const { data: session } = useSession();
   const { toast } = useToast();
+
   const [formValue, setFormValue] = useState<z.infer<typeof CreateTaskSchema>>({
     name: "",
     description: "",
@@ -22,15 +23,27 @@ export default function CreateTaskView() {
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
   };
 
+  const { addTask }: any = useTaskContext();
+
   async function handleSubmit(e: any) {
     e.preventDefault();
+
+    if (!session) {
+      return toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You have to login",
+        duration: 3000,
+      });
+    }
+
     if (formValue.name === "") {
       return toast({
         variant: "destructive",
-        title: 'Error',
-        description: 'Your task name cannot be empty',
-        duration: 3000
-      })
+        title: "Error",
+        description: "Your task name cannot be empty",
+        duration: 3000,
+      });
     }
 
     try {
@@ -42,11 +55,17 @@ export default function CreateTaskView() {
         }
       );
 
+      const newTask = response.data;
+
+      if (session) {
+        addTask(newTask);
+      }
+
       if ((response.status = 201)) {
         toast({
           title: formValue.name,
           description: "Your task has been created",
-          duration: 3000
+          duration: 3000,
         });
       }
 
@@ -78,8 +97,8 @@ export default function CreateTaskView() {
           onChange={handleInput}
           value={formValue.description}
         />
-        <div className="flex flex-row justify-end align-center mt-2">
-          <Button type="submit" variant="outline" onClick={() => {ShowTasks}}>
+        <div className="flex flex-row justify-end align-center mt-4">
+          <Button type="submit" variant="outline">
             Add task
           </Button>
         </div>
