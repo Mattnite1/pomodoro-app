@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const TaskContext = createContext("");
 
+
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
 
@@ -25,12 +26,16 @@ export const TaskProvider = ({ children }) => {
 
     fetchTasks();
   }, []);
+
   const addTask = (newTask: any) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
+  const deleteTask = (idToDelete: number) => {
+    setTasks(prevTasks => prevTasks.filter(task => task.id !== idToDelete));
+  };
   return (
-    <TaskContext.Provider value={{ tasks, addTask }}>
+    <TaskContext.Provider value={{ tasks, addTask, deleteTask }}>
       {children}
     </TaskContext.Provider>
   );

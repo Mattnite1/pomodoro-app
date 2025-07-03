@@ -8,3 +8,4 @@ export const CreateTaskSchema = z.object({
   inProgress: z.boolean()
 });
 
+export type Task = z.infer<typeof CreateTaskSchema>;

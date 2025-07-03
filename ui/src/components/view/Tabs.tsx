@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Tabs, Tab } from "@nextui-org/react";
-import { Card, CardBody } from "@nextui-org/react";
+import {Tabs, Tab} from "@heroui/tabs";
+import {Card, CardHeader, CardBody, } from "@heroui/card";
 import Timer from "../timer/Timer";
 
 type TabName = "study" | "s-break" | "l-break";

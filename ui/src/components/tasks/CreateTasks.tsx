@@ -1,15 +1,15 @@
 "use client";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@nextui-org/input";
+import { Input } from "@heroui/react";
 import axios from "axios";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { CreateTaskSchema } from "./zod.createTask.schema";
 import { useToast } from "@/components/ui/use-toast";
-import { useTaskContext } from "./ShowTaskContext";
+import { useTaskContext } from "./TasksContext";
 
-export default function CreateTaskView() {
+export default function CreateTasks() {
   const { data: session } = useSession();
   const { toast } = useToast();
 
@@ -26,7 +26,8 @@ export default function CreateTaskView() {
   const { addTask }: any = useTaskContext();
 
   async function handleSubmit(e: any) {
-    e.preventDefault();
+
+    e.preventDefault()
 
     if (!session) {
       return toast({
@@ -61,10 +62,10 @@ export default function CreateTaskView() {
         addTask(newTask);
       }
 
-      if ((response.status = 201)) {
+      if ((response.status === 201)) {
         toast({
           title: formValue.name,
-          description: "Your task has been created",
+          description: "task has been created",
           duration: 3000,
         });
       }
@@ -74,6 +75,7 @@ export default function CreateTaskView() {
         description: "",
         inProgress: true,
       });
+
     } catch (error) {
       console.log(error);
     }
@@ -82,18 +84,19 @@ export default function CreateTaskView() {
     <>
       <form onSubmit={handleSubmit}>
         <Input
+          className="mb-5"
           type="text"
-          variant="underlined"
-          label="Task"
           name="name"
+          label="name"
+          variant="underlined"
           onChange={handleInput}
           value={formValue.name}
         />
         <Input
           type="text"
-          variant="underlined"
           label="Description"
           name="description"
+          variant="underlined"
           onChange={handleInput}
           value={formValue.description}
         />
