@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import type { AxiosRequestConfig } from 'axios'
 
 export const axiosBaseConfig: AxiosRequestConfig = {
-  baseURL: 'http://localhost:3000/',
+  baseURL: 'http://localhost:3333/',
 }
 const apiInstance = axios.create(axiosBaseConfig)
 
@@ -26,6 +26,8 @@ apiInstance.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const refreshToken = localStorage.getItem('refreshToken')
+    // const data = loadStorageData(['refresh_token'])
+    // const refreshToken = data.refresh_token;
     const originalRequest = error.config
     // @ts-ignore
     if (error.response?.status === 401 && !originalRequest._retry && refreshToken) {

@@ -6,10 +6,6 @@ import Timer from "../timer/Timer";
 
 type TabName = "study" | "s-break" | "l-break";
 
-export default function TabsComponent() {
-  const [timer, setTimer] = useState(5);
-  const [currentModeIndex, setCurrentModeIndex] = useState(0);
-
   const modes = [
     "study",
     "s-break",
@@ -38,6 +34,13 @@ export default function TabsComponent() {
       content: <Timer inputMinutes={15} />,
     },
   ];
+  
+// TODO: Move to Molecules
+export default function TabsComponent() {
+  // TODO: add types to other useStates
+  const [timer, setTimer] = useState<number>(5);
+  const [currentModeIndex, setCurrentModeIndex] = useState(0);
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -46,7 +49,7 @@ export default function TabsComponent() {
         setCurrentModeIndex(nextModeIndex);
         setTimer(5);
       } else {
-        setTimer((prevTimer) => prevTimer - 1);
+        setTimer((prevTimer: number) => prevTimer - 1);
       }
     }, 1000);
 

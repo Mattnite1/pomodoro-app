@@ -7,6 +7,12 @@ import { AuthLoginDto, AuthSignupDto } from './dto';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
 
+// TODO: move to types file
+interface Tokens {
+      access_token: string;
+      refresh_token: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -70,7 +76,7 @@ export class AuthService {
     });
   }
 
-  async getTokens(userId: number, email: string) {
+  async getTokens(userId: number, email: string): Promise<Tokens> {
     const [access_token, refresh_token] = await Promise.all([
       this.jwt.signAsync(
         {

@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const TaskContext = createContext("");
 
+// TODO: Create contexts directory and keep all contexts there
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
 
