@@ -14,6 +14,8 @@ interface Task {
   id: number;
 }
 
+// TODO: change name to what it renders like TasksList
+
 export default function ShowTasks() {
   const { data: session } = useSession();
   const { tasks, deleteTask }: any = useTaskContext();

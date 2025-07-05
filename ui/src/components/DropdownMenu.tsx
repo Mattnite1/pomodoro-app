@@ -9,6 +9,7 @@ import { signOut, useSession } from "next-auth/react";
 import { AvatarDemo } from "./view/Avatar";
 import Link from "next/link";
 
+// TODO: Should be molecule
 export default function DropdownMenuComponent() {
   const { data: session } = useSession();
 

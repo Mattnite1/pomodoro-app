@@ -3,6 +3,7 @@ import { Link } from "@heroui/link";
 import { signIn, useSession } from "next-auth/react";
 import DropdownMenuView from "../DropdownMenu";
 
+// TODO: Move to Molecules
 function CheckSession() {
   const { data: session } = useSession();
 
