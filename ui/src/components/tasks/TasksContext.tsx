@@ -1,9 +1,9 @@
+import { isNil } from "@/lib/isNil";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const TaskContext = createContext("");
-
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
@@ -11,8 +11,13 @@ export const TaskProvider = ({ children }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       const currentSession = await getSession();
+
+      if (isNil(currentSession)) {
+        return console.log("getting tasks from ls");
+      }
+
       try {
-        const response = await axios.get('http://localhost:3333/tasks', {
+        const response = await axios.get("http://localhost:3333/tasks", {
           headers: {
             Authorization: "Bearer " + currentSession?.user?.refresh_token,
           },
@@ -32,7 +37,7 @@ export const TaskProvider = ({ children }) => {
   };
 
   const deleteTask = (idToDelete: number) => {
-    setTasks(prevTasks => prevTasks.filter(task => task.id !== idToDelete));
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== idToDelete));
   };
   return (
     <TaskContext.Provider value={{ tasks, addTask, deleteTask }}>

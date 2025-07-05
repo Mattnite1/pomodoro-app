@@ -1,0 +1,1 @@
+export const isNil = (data: any): data is null | undefined => data === undefined || data === null

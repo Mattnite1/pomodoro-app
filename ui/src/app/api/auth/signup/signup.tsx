@@ -7,6 +7,7 @@ import { FormSchema } from "./zod.signup.schema";
 export default function InputForm() {
   async function handleSubmit(data: z.infer<typeof FormSchema>) {
     await axios.post("http://localhost:3333/auth/signup", data);
+
   }
 
   return (

@@ -156,7 +156,7 @@ export const authOptions = {
   callbacks: {
     async signIn(account) {
       try {
-        await axios.post("http://localhost:3333/auth/signup", {
+        await axios.post("http://localhost:3333/auth/login", {
           email: account.user.email,
           username: account.user.name,
           password: account.profile.at_hash,

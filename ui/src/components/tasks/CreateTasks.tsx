@@ -26,16 +26,10 @@ export default function CreateTasks() {
   const { addTask }: any = useTaskContext();
 
   async function handleSubmit(e: any) {
-
-    e.preventDefault()
+    e.preventDefault();
 
     if (!session) {
-      return toast({
-        variant: "destructive",
-        title: "Error",
-        description: "You have to login",
-        duration: 3000,
-      });
+      return console.log("ls");
     }
 
     if (formValue.name === "") {
@@ -62,7 +56,7 @@ export default function CreateTasks() {
         addTask(newTask);
       }
 
-      if ((response.status === 201)) {
+      if (response.status === 201) {
         toast({
           title: formValue.name,
           description: "task has been created",
@@ -75,7 +69,6 @@ export default function CreateTasks() {
         description: "",
         inProgress: true,
       });
-
     } catch (error) {
       console.log(error);
     }

@@ -51,7 +51,7 @@ export default function TabsComponent() {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [currentModeIndex, timer]);
+  }, [currentModeIndex, timer, modes.length]);
 
   const activeTab = modes[currentModeIndex];
 
