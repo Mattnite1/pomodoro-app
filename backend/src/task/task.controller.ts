@@ -4,15 +4,14 @@ import {
   Body,
   UseGuards,
   Get,
-  Put,
-  Patch,
   Param,
   UsePipes,
   ValidationPipe,
+  Delete,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { CreateTaskDto, UpdateTaskDto } from './dto';
-import { GetUser, GetTask } from 'src/auth/decorator';
+import { CreateTaskDto } from './dto';
+import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 
 @UseGuards(JwtGuard)
@@ -30,9 +29,9 @@ export class TaskController {
     return this.taskService.createTask(userId, dto);
   }
 
-  @Patch(':id')
-  @UsePipes(new ValidationPipe({transform: true}))
-  async updateTask(@Param('id') taskId: number, @Body() dto: UpdateTaskDto) {
-    return this.taskService.updateTask(taskId, dto);
+  @Delete(':id')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async deleteTask(@Param('id') taskId: number) {
+    return this.taskService.deleteTask(taskId);
   }
 }
