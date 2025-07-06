@@ -7,11 +7,6 @@ import { AuthLoginDto, AuthSignupDto } from './dto';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
 
-// TODO: move to types file
-interface Tokens {
-      access_token: string;
-      refresh_token: string;
-}
 
 @Injectable()
 export class AuthService {

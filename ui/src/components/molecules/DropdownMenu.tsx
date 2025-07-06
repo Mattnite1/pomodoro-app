@@ -4,12 +4,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/atoms/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
-import { AvatarDemo } from "./view/Avatar";
 import Link from "next/link";
+import { AvatarDemo } from "./AvatarDemo";
 
-// TODO: Should be molecule
 export default function DropdownMenuComponent() {
   const { data: session } = useSession();
 

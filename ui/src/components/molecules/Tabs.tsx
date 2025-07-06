@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {Tabs, Tab} from "@heroui/tabs";
-import {Card, CardHeader, CardBody, } from "@heroui/card";
-import Timer from "../timer/Timer";
+import {Card, CardBody, } from "@heroui/card";
+import Timer from "./timer/Timer";
 
 type TabName = "study" | "s-break" | "l-break";
 
@@ -35,11 +35,9 @@ type TabName = "study" | "s-break" | "l-break";
     },
   ];
   
-// TODO: Move to Molecules
 export default function TabsComponent() {
-  // TODO: add types to other useStates
   const [timer, setTimer] = useState<number>(5);
-  const [currentModeIndex, setCurrentModeIndex] = useState(0);
+  const [currentModeIndex, setCurrentModeIndex] = useState<number>(0);
 
 
   useEffect(() => {

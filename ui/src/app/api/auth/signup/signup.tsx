@@ -1,5 +1,5 @@
 "use client";
-import AutoForm, { AutoFormSubmit } from "@/components/ui/auto-form";
+import AutoForm, { AutoFormSubmit } from "@/components/atoms/auto-form";
 import axios from "axios";
 import * as z from "zod";
 import { FormSchema } from "./zod.signup.schema";

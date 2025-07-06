@@ -1,16 +1,15 @@
 "use client";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { Input } from "@heroui/react";
-import axios from "axios";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { CreateTaskSchema } from "./zod.createTask.schema";
-import { useToast } from "@/components/ui/use-toast";
-import { useTaskContext } from "./TasksContext";
+import { useToast } from "@/components/atoms/use-toast";
+import { CreateTaskSchema } from "@/schemas/zod.createTask.schema";
+import { useTaskContext } from "@/contexts/TasksContext";
+import { axiosApiInstance } from "../../../../axios";
 
-// TODO: change name to what it renders like TasksForm
-export default function CreateTasks() {
+export default function TasksForm() {
   const { data: session } = useSession();
   const { toast } = useToast();
 
@@ -43,20 +42,7 @@ export default function CreateTasks() {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3333/tasks",
-        formValue,
-        {
-          headers: { Authorization: "Bearer " + session?.user?.refresh_token },
-        }
-      );
-
-      // TODO: With already created apiInstance
-      // const response = await apiInstance.post(
-      //   "/tasks",
-      //   formValue,
-      // );
-
+      const response = await axiosApiInstance.post("/tasks", formValue);
 
       const newTask = response.data;
 

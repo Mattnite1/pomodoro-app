@@ -1,64 +1,71 @@
-import axios, { AxiosError } from 'axios'
-import type { AxiosRequestConfig } from 'axios'
+import axios, { AxiosError } from "axios";
+import type { AxiosRequestConfig } from "axios";
+import { getSession } from "next-auth/react";
 
+const baseURL = process.env.NEXT_PUBLIC_DB_URL;
 export const axiosBaseConfig: AxiosRequestConfig = {
-  baseURL: 'http://localhost:3333/',
-}
-const apiInstance = axios.create(axiosBaseConfig)
+  baseURL,
+};
+const apiInstance = axios.create(axiosBaseConfig);
 
 apiInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token')
+  async (config) => {
+
+    const session = await getSession();
+    const token = session?.user?.access_token;
+
     config.headers = {
-      Authorization: `Bearer ${token as string}`,
-      'Content-Type': 'application/json',
-    }
-    return config
+      Authorization: "Bearer " + token,
+    };
+    return config;
   },
   (error) => {
-    Promise.reject(error)
-  },
-)
+    Promise.reject(error);
+  }
+);
 
 apiInstance.interceptors.response.use(
   (response) => {
-    return response
+    return response;
   },
   async (error: AxiosError) => {
-    const refreshToken = localStorage.getItem('refreshToken')
+    const refreshToken = localStorage.getItem("refreshToken");
     // const data = loadStorageData(['refresh_token'])
     // const refreshToken = data.refresh_token;
-    const originalRequest = error.config
+    const originalRequest = error.config;
     // @ts-ignore
-    if (error.response?.status === 401 && !originalRequest._retry && refreshToken) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      refreshToken
+    ) {
       // @ts-ignore
-      originalRequest._retry = true
-      // TODO: change to .env
+      originalRequest._retry = true;
       const { data } = await axios.post(
-        'http://localhost:3000/auth/refresh',
+        baseURL + "/auth/refresh",
         {},
         {
           headers: {
-            Authorization: 'Bearer ' + (refreshToken as string),
+            Authorization: "Bearer " + (refreshToken as string),
           },
-        },
-      )
-      localStorage.setItem('token', data.access_token)
-      localStorage.setItem('refreshToken', data.refresh_token)
-      return apiInstance(originalRequest)
+        }
+      );
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
+      return apiInstance(originalRequest);
     }
-    return Promise.reject(error)
-  },
-)
+    return Promise.reject(error);
+  }
+);
 
 const setTokens = (token: string, refreshToken: string) => {
-      localStorage.setItem('token', token)
-      localStorage.setItem('refreshToken', refreshToken)
-}
+  localStorage.setItem("token", token);
+  localStorage.setItem("refreshToken", refreshToken);
+};
 
 const clearTokens = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('refreshToken')
-}
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+};
 
-export { apiInstance as axiosApiInstance, setTokens, clearTokens }
+export { apiInstance as axiosApiInstance, setTokens, clearTokens };

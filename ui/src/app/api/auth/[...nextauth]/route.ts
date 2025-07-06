@@ -141,7 +141,7 @@ export const authOptions = {
         },
       },
       async authorize(credentials, req) {
-        const response = await fetch(process.env.DB_URL + "auth/login", {
+        const response = await fetch(process.env.NEXT_PUBLIC_DB_URL + "auth/login", {
           method: "POST",
           body: JSON.stringify(credentials),
           headers: { "Content-Type": "application/json" },

@@ -2,10 +2,9 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar"
+} from "@/components/atoms/avatar"
 import { useSession } from "next-auth/react"
  
-// TODO: Move to Molecules
 export function AvatarDemo() {
   const session = useSession()
 

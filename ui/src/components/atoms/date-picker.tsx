@@ -3,13 +3,13 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/atoms/button";
+import { Calendar } from "@/components/atoms/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/atoms/popover";
 import { forwardRef } from "react";
 
 export const DatePicker = forwardRef<

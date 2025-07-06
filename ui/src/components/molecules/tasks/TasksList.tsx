@@ -1,31 +1,20 @@
 "use client";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/atoms/scroll-area";
 import { Checkbox } from "@heroui/checkbox";
 import { Accordion, AccordionItem } from "@heroui/accordion";
-import { useTaskContext } from "./TasksContext";
-import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/atoms/use-toast";
+import { useTaskContext } from "@/contexts/TasksContext";
+import { axiosApiInstance } from "../../../../axios";
 
-interface Task {
-  name: string;
-  description: string;
-  inProgress: boolean;
-  id: number;
-}
-
-// TODO: change name to what it renders like TasksList
-
-export default function ShowTasks() {
+export default function TasksList() {
   const { data: session } = useSession();
   const { tasks, deleteTask }: any = useTaskContext();
   const { toast } = useToast();
 
   const handleDeleteTask = async (taskId: number) => {
     try {
-      await axios.delete(`http://localhost:3333/tasks/${taskId}`, {
-        headers: { Authorization: "Bearer " + session?.user?.refresh_token },
-      });
+      await axiosApiInstance.delete(`/tasks/${taskId}`);
 
       toast({
         title: "removed correctly",
@@ -33,12 +22,10 @@ export default function ShowTasks() {
       });
 
       deleteTask(taskId);
-
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
     <>
       {!session ? null : <h1>To Do:</h1>}

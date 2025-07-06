@@ -1,10 +1,10 @@
 "use client";
 import * as React from "react";
-import CreateTasks from "@/components/tasks/CreateTasks";
-import { TaskProvider } from "@/components/tasks/TasksContext";
-import ShowTasks from "@/components/tasks/ShowTasks";
-import TabsComponent from "@/components/view/Tabs";
+import { TaskProvider } from "@/contexts/TasksContext";
+import TabsComponent from "@/components/molecules/Tabs";
 import {HeroUIProvider} from "@heroui/react";
+import TasksForm from "@/components/molecules/tasks/TasksForm";
+import TasksList from "@/components/molecules/tasks/TasksList";
 
 
 export default function Home() {
@@ -15,8 +15,8 @@ export default function Home() {
           <TabsComponent />
           <section className="flex flex-col justify-center">
             <TaskProvider>
-              <CreateTasks />
-              <ShowTasks />
+              <TasksForm />
+              <TasksList />
             </TaskProvider>
           </section>
         </section>
