@@ -58,14 +58,6 @@ apiInstance.interceptors.response.use(
   }
 );
 
-const setTokens = (token: string, refreshToken: string) => {
-  localStorage.setItem("token", token);
-  localStorage.setItem("refreshToken", refreshToken);
-};
 
-const clearTokens = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
-};
 
-export { apiInstance as axiosApiInstance, setTokens, clearTokens };
+export { apiInstance as axiosApiInstance };

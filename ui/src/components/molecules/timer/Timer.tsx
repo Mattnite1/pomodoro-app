@@ -7,14 +7,20 @@ import ResetButton from "./ResetButton";
 
 interface inputMinutes {
   inputMinutes: number;
+  // TODO: Remove Function, like in Tabs.tsx
+  onTimeEnd: Function;
 }
 
 const Timer = (props: inputMinutes) => {
-  const durationInSeconds = props.inputMinutes * 60;
-  const [time, setTime] = useState(durationInSeconds);
+  // TODO: change to minutes later
+  const durationInSeconds = props.inputMinutes;
+  const [time, setTime] = useState(props.inputMinutes);
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    if (time === 0) {
+      props.onTimeEnd();
+    }
     if (isActive && time > 0) {
       var interval = setInterval(() => {
         setTime((prevTime) => prevTime - 1);
@@ -68,4 +74,4 @@ const Timer = (props: inputMinutes) => {
   );
 };
 
-export default Timer
+export default Timer;

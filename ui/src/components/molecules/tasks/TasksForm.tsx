@@ -1,19 +1,18 @@
 "use client";
-import * as z from "zod";
 import { Button } from "@/components/atoms/button";
 import { Input } from "@heroui/react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/atoms/use-toast";
-import { CreateTaskSchema } from "@/schemas/zod.createTask.schema";
+import { CreateTaskPayload, Task } from "@/schemas/zod.createTask.schema";
 import { useTaskContext } from "@/contexts/TasksContext";
-import { axiosApiInstance } from "../../../../axios";
+import { createTask } from "@/repositories/taskRepository";
 
 export default function TasksForm() {
   const { data: session } = useSession();
   const { toast } = useToast();
 
-  const [formValue, setFormValue] = useState<z.infer<typeof CreateTaskSchema>>({
+  const [formValue, setFormValue] = useState<CreateTaskPayload>({
     name: "",
     description: "",
     inProgress: true,
@@ -31,7 +30,7 @@ export default function TasksForm() {
     if (!session) {
       return console.log("ls");
     }
-
+    // TODO: create hook for toasts
     if (formValue.name === "") {
       return toast({
         variant: "destructive",
@@ -42,21 +41,15 @@ export default function TasksForm() {
     }
 
     try {
-      const response = await axiosApiInstance.post("/tasks", formValue);
+      const newTask = await createTask(formValue);
 
-      const newTask = response.data;
+      addTask(newTask);
 
-      if (session) {
-        addTask(newTask);
-      }
-
-      if (response.status === 201) {
-        toast({
-          title: formValue.name,
-          description: "task has been created",
-          duration: 3000,
-        });
-      }
+      toast({
+        title: formValue.name,
+        description: "task has been created",
+        duration: 3000,
+      });
 
       setFormValue({
         name: "",
@@ -64,7 +57,11 @@ export default function TasksForm() {
         inProgress: true,
       });
     } catch (error) {
-      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        duration: 3000,
+      });
     }
   }
   return (

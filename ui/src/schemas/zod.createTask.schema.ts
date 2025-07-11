@@ -5,7 +5,13 @@ export const CreateTaskSchema = z.object({
     message: "task must be at least 2 characters.",
   }),
   description: z.string(),
-  inProgress: z.boolean()
+  inProgress: z.boolean(),
 });
 
-export type Task = z.infer<typeof CreateTaskSchema>;
+export type CreateTaskPayload = z.infer<typeof CreateTaskSchema>;
+export type Task = CreateTaskPayload & {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: number;
+};

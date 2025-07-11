@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useToast } from "@/components/atoms/use-toast";
 import { useTaskContext } from "@/contexts/TasksContext";
 import { axiosApiInstance } from "../../../../axios";
+import { Task } from "@/schemas/zod.createTask.schema";
 
 export default function TasksList() {
   const { data: session } = useSession();
