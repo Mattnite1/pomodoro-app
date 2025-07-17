@@ -7,6 +7,8 @@ import { useToast } from "@/components/atoms/use-toast";
 import { CreateTaskPayload, Task } from "@/schemas/zod.createTask.schema";
 import { useTaskContext } from "@/contexts/TasksContext";
 import { createTask } from "@/repositories/taskRepository";
+import { isNil } from "@/lib/isNil";
+import { loadStorageData, saveStorageData } from "@/lib/localstorage";
 
 export default function TasksForm() {
   const { data: session } = useSession();
@@ -27,9 +29,6 @@ export default function TasksForm() {
   async function handleSubmit(e: any) {
     e.preventDefault();
 
-    if (!session) {
-      return console.log("ls");
-    }
     // TODO: create hook for toasts
     if (formValue.name === "") {
       return toast({
@@ -37,6 +36,27 @@ export default function TasksForm() {
         title: "Error",
         description: "Your task name cannot be empty",
         duration: 3000,
+      });
+    }
+
+    if (isNil(session)) {
+      const existingLocalStorageTasks = loadStorageData(["tasks"]);
+
+      const newTasksToSave: CreateTaskPayload[] = Array.isArray(
+        existingLocalStorageTasks.tasks
+      )
+        ? existingLocalStorageTasks.tasks
+        : [];
+
+      newTasksToSave.push(formValue);
+
+      saveStorageData({ tasks: newTasksToSave });
+
+      // TODO: reuzywalna
+      setFormValue({
+        name: "",
+        description: "",
+        inProgress: true,
       });
     }
 
